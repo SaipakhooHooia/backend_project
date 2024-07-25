@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta charset="utf-8"/>
+        <title>Chat Broad</title>
+        <link rel="stylesheet" type="text/css" href="/static/chat_broad.css" />
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <div class = "header">
+            <h1>留言板</h1>
+            <div class = "mountain_icon"></div>
+        </div>
+        <hr>
+        <form id = "form">
+            <div class = "wrapper">
+                <div class = "flower_icon flower1"></div>
+                <label for = "message">留言</label>
+                <input placeholder = "What's on your mind?" id = "message" name = "message">
+            </div>
+            <br>
+            <div class = "wrapper">
+                <div class = "flower_icon flower2"></div>
+                <label for = "image">上傳圖片</label>
+                <input type = "file" accept = "image/*" id = "image" name = "image">
+            </div>
+            <br>
+            <div class = "wrapper">
+                <button type = "submit">送出</button>
+            </div>
+        </form>
+        <div class = "history_comments"></div>
+        <script src="/static/chat_broad.js" defer></script>
+    </body>
+</html>

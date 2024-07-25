@@ -1,0 +1,11 @@
+services:
+  backend:
+    pull_policy: never
+    build:
+      context: ./backend
+    image: backend
+    container_name: backend
+    ports:
+      - "8000:8000"
+    restart: always
+
