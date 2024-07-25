@@ -1,4 +1,5 @@
 import mysql.connector
+from mysql.connector.pooling import MySQLConnectionPool
 import logging
 import os
 from dotenv import load_dotenv
@@ -9,29 +10,29 @@ MYSQL_HOST = os.getenv('MYSQL_HOST')
 MYSQL_USER = os.getenv('MYSQL_USER')
 MYSQL_PASSWORD = os.getenv('MYSQL_PASSWORD')
 
-mydb = mysql.connector.connect(
-    host = MYSQL_HOST,
-    user = MYSQL_USER,
-    password = MYSQL_PASSWORD
-)
+mydb = {
+    "host" : MYSQL_HOST,
+    "user" : MYSQL_USER,
+    "password" : MYSQL_PASSWORD
+}
 
-mycursor = mydb.cursor(buffered=True)
+pool = MySQLConnectionPool(pool_name="mypool", pool_size=5, **mydb)
+
+connection = pool.get_connection()
+mycursor = connection.cursor()
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def create_connection():
-    global mydb, mycursor
-    mydb = mysql.connector.connect(
-    host = MYSQL_HOST,
-    user = MYSQL_USER,
-    password = MYSQL_PASSWORD
-    )
+    global connection, mycursor
+    pool = MySQLConnectionPool(pool_name="mypool", pool_size=5, **mydb)
 
-    mycursor = mydb.cursor(buffered=True)
+    connection = pool.get_connection()
+    mycursor = connection.cursor()
 
 def check_connection():
-    if mydb:
+    if connection:
         logging.info("Connected to RDS success.")
     else:
         logging.error("Connected to RDS failed.")
@@ -49,7 +50,7 @@ def add_data(comment = None, image = None):
     val = (comment, image)
     mycursor.execute(sql, val)
 
-    mydb.commit()
+    connection.commit()
 
 def show_data():
     sql = "SELECT * FROM chat_broad.chat_record;"
@@ -88,8 +89,6 @@ def manage_data():
         pass
 
 def delete_data():
-    sql = "DELETE FROM chat_broad.chat_record WHERE id < 45;"
+    sql = "DELETE FROM chat_broad.chat_record WHERE id < 47;"
     mycursor.execute(sql)
-    mydb.commit()
-
-delete_data()
+    connection.commit()
